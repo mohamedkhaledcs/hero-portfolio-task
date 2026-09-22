@@ -1,10 +1,8 @@
+
+
 let eventStyle = document.createElement("style");
 
 eventStyle.textContent = `
-    * {
-        cursor: none !important;
-    }
-
     .custom-cursor {
         position: fixed;
         width: 26px;
@@ -14,11 +12,12 @@ eventStyle.textContent = `
         pointer-events: none;
         z-index: 99999;
         transform: translate(-50%, -50%);
-        transition: width 0.15s,
-                    height 0.15s,
-                    border-color 0.15s;
-        box-shadow:
-            0 0 12px rgba(255,113,0,0.3);
+        transition:
+            width 0.15s,
+            height 0.15s,
+            border-color 0.15s;
+        box-shadow: 0 0 12px rgba(255,113,0,0.3);
+
     }
 
     .cursor-dot {
@@ -31,6 +30,7 @@ eventStyle.textContent = `
         z-index: 100000;
         transform: translate(-50%, -50%);
         box-shadow: 0 0 8px #ff7100;
+
     }
 
     .cursor-line {
@@ -39,18 +39,21 @@ eventStyle.textContent = `
         pointer-events: none;
         z-index: 99998;
         opacity: 0.8;
+
     }
 
     .cursor-horizontal {
         width: 38px;
         height: 1px;
         transform: translate(-50%, -50%);
+
     }
 
     .cursor-vertical {
         width: 1px;
         height: 38px;
         transform: translate(-50%, -50%);
+
     }
 
     .click-effect {
@@ -63,43 +66,42 @@ eventStyle.textContent = `
         z-index: 99997;
         transform: translate(-50%, -50%);
         animation: clickEffect 0.5s ease-out forwards;
+
     }
 
     @keyframes clickEffect {
-
         from {
             opacity: 1;
             width: 10px;
             height: 10px;
         }
-
         to {
             opacity: 0;
             width: 65px;
             height: 65px;
         }
+
     }
 
     .image-clicked {
-        animation:
-            imageClick 0.45s ease;
+        animation: imageClick 0.45s ease;
+
     }
 
     @keyframes imageClick {
-
         0% {
             transform: scale(1);
         }
-
         40% {
             transform:
                 scale(1.05)
                 rotate(-1deg);
-        }
 
+        }
         100% {
             transform: scale(1);
         }
+
     }
 
     .skill-tag {
@@ -112,18 +114,24 @@ eventStyle.textContent = `
         font-size: 12px;
         font-weight: 600;
         letter-spacing: 0.5px;
-        box-shadow:
-            0 0 20px rgba(255,113,0,0.12);
+        box-shadow: 0 0 20px rgba(255,113,0,0.12);
         opacity: 0;
         transform: scale(0.4);
         pointer-events: auto;
         z-index: 20;
         transition: 0.3s;
+        text-decoration: none;
+
     }
 
     .skill-tag.show {
         opacity: 1;
         transform: scale(1);
+    }
+
+    .skill-tag:focus {
+        outline: 2px solid #ff7100;
+        outline-offset: 3px;
     }
 
     .skill-center {
@@ -136,13 +144,16 @@ eventStyle.textContent = `
         opacity: 0;
         transform: scale(0);
         transition: 0.4s;
+        pointer-events: none;
+
+
     }
 
     .skill-center.show {
         opacity: 1;
         transform: scale(1);
-        box-shadow:
-            0 0 25px rgba(255,113,0,0.7);
+        box-shadow: 0 0 25px rgba(255,113,0,0.7);
+
     }
 
     .context-menu {
@@ -152,11 +163,12 @@ eventStyle.textContent = `
         background: rgba(15,15,15,0.97);
         border: 1px solid rgba(255,113,0,0.45);
         border-radius: 10px;
-        box-shadow:
-            0 20px 50px rgba(0,0,0,0.55);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.55);
         z-index: 999999;
         backdrop-filter: blur(12px);
         animation: contextShow 0.15s ease;
+
+
     }
 
     .context-title {
@@ -166,241 +178,298 @@ eventStyle.textContent = `
         padding: 10px;
         border-bottom: 1px solid #333;
         margin-bottom: 4px;
+
     }
 
     .context-item {
+        width: 100%;
+        box-sizing: border-box;
         color: #aaa;
         padding: 10px;
+        border: none;
+        background: transparent;
         border-radius: 6px;
         font-size: 13px;
+        text-align: left;
         cursor: pointer;
         transition: 0.2s;
+        font-family: inherit;
+
+
     }
 
-    .context-item:hover {
+
+    .context-item:hover,
+    .context-item:focus {
         background: rgba(255,113,0,0.1);
         color: #ff7100;
         padding-left: 15px;
+        outline: none;
+
+    }
+
+    .context-item:focus-visible {
+        outline: 2px solid #ff7100;
+        outline-offset: -2px;
     }
 
     @keyframes contextShow {
-
         from {
             opacity: 0;
             transform: scale(0.95);
         }
-
         to {
             opacity: 1;
             transform: scale(1);
         }
+
     }
+
+    @media (hover: hover) and (pointer: fine) {
+        .custom-cursor,
+        .cursor-dot,
+        .cursor-line {
+            display: block;
+        }
+
+    }
+
+
+    @media (hover: none), (pointer: coarse) {
+        .custom-cursor,
+        .cursor-dot,
+        .cursor-line {
+            display: none;
+        }
+
+    }
+
+
+    @media (prefers-reduced-motion: reduce) {
+        .click-effect,
+        .image-clicked,
+        .context-menu {
+            animation: none !important;
+        }
+
+    }
+
 `;
 
 document.head.appendChild(eventStyle);
 
-// Custom Cursor
 
+// Reduced Motion
+let reducedMotion =
+    window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+
+// Custom Cursor
 let cursor = document.createElement("div");
 
 cursor.className = "custom-cursor";
 
+cursor.setAttribute(
+    "aria-hidden",
+    "true"
+);
 document.body.appendChild(cursor);
 
 let cursorDot = document.createElement("div");
 
 cursorDot.className = "cursor-dot";
 
+cursorDot.setAttribute(
+    "aria-hidden",
+    "true"
+);
+
 document.body.appendChild(cursorDot);
 
 let horizontalLine = document.createElement("div");
 
-horizontalLine.className =
-    "cursor-line cursor-horizontal";
+horizontalLine.className = "cursor-line cursor-horizontal";
 
-document.body.appendChild(horizontalLine);
+horizontalLine.setAttribute(
+    "aria-hidden",
+    "true"
+);
+
+document.body.appendChild(
+    horizontalLine
+);
 
 let verticalLine = document.createElement("div");
 
-verticalLine.className =
-    "cursor-line cursor-vertical";
+verticalLine.className = "cursor-line cursor-vertical";
 
-document.body.appendChild(verticalLine);
+verticalLine.setAttribute(
+    "aria-hidden",
+    "true"
+);
+
+document.body.appendChild(
+    verticalLine
+);
+
 
 // Mouse Move
+document.addEventListener(
+    "mousemove",
+    function (event) {
+        cursor.style.left = event.clientX + "px";
+        cursor.style.top = event.clientY + "px";
 
-document.addEventListener("mousemove", function (event) {
+        cursorDot.style.left = event.clientX + "px";
+        cursorDot.style.top = event.clientY + "px";
 
-    cursor.style.left =
-        event.clientX + "px";
+        horizontalLine.style.left = event.clientX + "px";
+        horizontalLine.style.top = event.clientY + "px";
 
-    cursor.style.top =
-        event.clientY + "px";
+        verticalLine.style.left = event.clientX + "px";
+        verticalLine.style.top = event.clientY + "px";
 
-    cursorDot.style.left =
-        event.clientX + "px";
+    }
 
-    cursorDot.style.top =
-        event.clientY + "px";
+);
 
-    horizontalLine.style.left =
-        event.clientX + "px";
-
-    horizontalLine.style.top =
-        event.clientY + "px";
-
-    verticalLine.style.left =
-        event.clientX + "px";
-
-    verticalLine.style.top =
-        event.clientY + "px";
-});
 
 // Click Sound
-
 function playClickSound() {
+    if (reducedMotion) {
+        return;
+    }
 
-    let audioContext = new (
-        window.AudioContext ||
-        window.webkitAudioContext
-    )();
-
-    let oscillator =
-        audioContext.createOscillator();
-
-    let gain =
-        audioContext.createGain();
+    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let oscillator = audioContext.createOscillator();
+    let gain = audioContext.createGain();
 
     oscillator.type = "square";
+    oscillator.frequency.setValueAtTime(650, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(120, audioContext.currentTime + 0.08);
 
-    oscillator.frequency.setValueAtTime(
-        650,
-        audioContext.currentTime
-    );
 
-    oscillator.frequency.exponentialRampToValueAtTime(
-        120,
-        audioContext.currentTime + 0.08
-    );
-
-    gain.gain.setValueAtTime(
-        0.07,
-        audioContext.currentTime
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-        0.001,
-        audioContext.currentTime + 0.08
-    );
+    gain.gain.setValueAtTime(0.07, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.08);
 
     oscillator.connect(gain);
-
-    gain.connect(audioContext.destination);
+    gain.connect(
+        audioContext.destination
+    );
 
     oscillator.start();
-
     oscillator.stop(
         audioContext.currentTime + 0.08
     );
+
 }
 
-// Click Effect
 
+// Click Effect
 function createClickEffect(x, y) {
+    if (reducedMotion) {
+        return;
+    }
 
     let effect = document.createElement("div");
-
     effect.className = "click-effect";
-
     effect.style.left = x + "px";
     effect.style.top = y + "px";
 
-    document.body.appendChild(effect);
-
-    setTimeout(function () {
-        effect.remove();
-    }, 500);
-}
-
-// Every Click
-
-document.addEventListener("click", function (event) {
-
-    createClickEffect(
-        event.clientX,
-        event.clientY
+    document.body.appendChild(
+        effect
     );
 
-    playClickSound();
-});
+    setTimeout(
+        function () {
+            effect.remove();
+        }, 500
+    );
+
+}
+
+
+// Every Click
+document.addEventListener(
+    "click",
+    function (event) {
+        createClickEffect(
+            event.clientX,
+            event.clientY
+        );
+
+        playClickSound();
+    }
+);
+
 
 // Hover Interactive Elements
-
 let interactiveElements =
     document.querySelectorAll(
         "a, button, img"
     );
 
-interactiveElements.forEach(function (element) {
 
-    element.addEventListener(
-        "mouseenter",
-        function () {
+interactiveElements.forEach(
+    function (element) {
+        element.addEventListener(
+            "mouseenter",
+            function () {
+                cursor.style.width = "38px";
+                cursor.style.height = "38px";
+                cursor.style.borderColor = "#fff";
+                cursorDot.style.backgroundColor = "#fff";
 
-            cursor.style.width = "38px";
-            cursor.style.height = "38px";
-            cursor.style.borderColor = "#fff";
+            }
+        );
 
-            cursorDot.style.backgroundColor =
-                "#fff";
-        }
-    );
+        element.addEventListener(
+            "mouseleave",
+            function () {
+                cursor.style.width = "26px";
+                cursor.style.height = "26px";
+                cursor.style.borderColor = "#ff7100";
+                cursorDot.style.backgroundColor = "#ff7100";
 
-    element.addEventListener(
-        "mouseleave",
-        function () {
+            }
+        );
 
-            cursor.style.width = "26px";
-            cursor.style.height = "26px";
-            cursor.style.borderColor =
-                "#ff7100";
+    }
+);
 
-            cursorDot.style.backgroundColor =
-                "#ff7100";
-        }
-    );
-});
 
 // Right Click
-
 document.addEventListener(
     "contextmenu",
     function (event) {
-
         event.preventDefault();
-
         removeContextMenu();
 
-        let menu =
-            document.createElement("div");
-
+        let menu = document.createElement("div");
         menu.className = "context-menu";
+        menu.setAttribute(
+            "role",
+            "menu"
+        );
 
-        menu.style.left =
-            event.clientX + "px";
+        menu.setAttribute(
+            "aria-label",
+            "Portfolio menu"
+        );
+        menu.style.left = event.clientX + "px";
+        menu.style.top = event.clientY + "px";
 
-        menu.style.top =
-            event.clientY + "px";
-
-        let title =
-            document.createElement("div");
-
+        let title = document.createElement("div");
         title.className = "context-title";
-
-        title.textContent =
-            "Mohamed Khaled";
-
+        title.textContent = "Mohamed Khaled";
+        title.setAttribute(
+            "role",
+            "presentation"
+        );
         menu.appendChild(title);
+
 
         let menuItems = [
             {
@@ -409,389 +478,342 @@ document.addEventListener(
                     location.reload();
                 }
             },
+
             {
                 text: "Home",
                 action: function () {
-
                     window.scrollTo({
                         top: 0,
                         behavior: "smooth"
                     });
+
                 }
             },
+
             {
                 text: "GitHub",
                 action: function () {
-
                     window.open(
                         "https://github.com/mohamedkhaledcs",
                         "_blank"
                     );
+
                 }
             },
+
             {
                 text: "LinkedIn",
                 action: function () {
-
                     window.open(
                         "https://www.linkedin.com/in/mohamed-khaled-a314792ab/",
                         "_blank"
                     );
+
                 }
             },
+
             {
                 text: "Instagram",
                 action: function () {
-
                     window.open(
                         "https://www.instagram.com/mohamedkhaledcs/",
                         "_blank"
                     );
+
                 }
             },
+
             {
                 text: "Email",
                 action: function () {
-
                     window.location.href =
                         "mailto:mohamed.khaled.career@gmail.com";
+
                 }
             },
+
             {
                 text: "Close",
                 action: function () {
-
                     removeContextMenu();
+
                 }
             }
+
         ];
 
-        menuItems.forEach(function (item) {
 
-            let menuItem =
-                document.createElement("div");
+        menuItems.forEach(
+            function (item) {
+                let menuItem = document.createElement("button");
+                menuItem.type = "button";
+                menuItem.className = "context-item";
+                menuItem.textContent = item.text;
 
-            menuItem.className =
-                "context-item";
+                menuItem.setAttribute(
+                    "role",
+                    "menuitem"
+                );
 
-            menuItem.textContent =
-                item.text;
+                menuItem.addEventListener(
+                    "click",
+                    function (event) {
+                        event.stopPropagation();
+                        item.action();
 
-            menuItem.addEventListener(
-                "click",
-                function (event) {
+                    }
+                );
 
-                    event.stopPropagation();
+                menu.appendChild(
+                    menuItem
+                );
 
-                    item.action();
-                }
-            );
+            }
+        );
 
-            menu.appendChild(menuItem);
-        });
+        document.body.appendChild(
+            menu
+        );
+        let menuWidth = menu.offsetWidth;
+        let menuHeight = menu.offsetHeight;
 
-        document.body.appendChild(menu);
+        if (event.clientX + menuWidth > window.innerWidth) {
+            menu.style.left = window.innerWidth - menuWidth - 10 + "px";
+            
+        }
+        if (event.clientY + menuHeight > window.innerHeight) {
+            menu.style.top = window.innerHeight - menuHeight - 10 + "px";
 
-        let menuWidth =
-            menu.offsetWidth;
-
-        let menuHeight =
-            menu.offsetHeight;
-
-        if (
-            event.clientX + menuWidth >
-            window.innerWidth
-        ) {
-
-            menu.style.left =
-                window.innerWidth -
-                menuWidth -
-                10 +
-                "px";
         }
 
-        if (
-            event.clientY + menuHeight >
-            window.innerHeight
-        ) {
+        let firstItem = menu.querySelector(".context-item");
+        if (firstItem) {
+            firstItem.focus();
 
-            menu.style.top =
-                window.innerHeight -
-                menuHeight -
-                10 +
-                "px";
         }
+
     }
 );
 
-// Remove Context Menu
 
+// Remove Context Menu
 document.addEventListener(
     "click",
     function () {
-
         removeContextMenu();
+
     }
 );
 
 function removeContextMenu() {
-
     let oldMenu =
-        document.querySelector(
-            ".context-menu"
-        );
+        document.querySelector(".context-menu");
 
     if (oldMenu) {
         oldMenu.remove();
+
     }
+
 }
 
-// Image Click
 
+// Image Click
 let personImage =
     document.querySelector(
         "img[src='assets/mk.png']"
     );
 
 if (personImage) {
-
     personImage.addEventListener(
         "click",
         function (event) {
-
             event.stopPropagation();
-
-            personImage.classList.remove(
-                "image-clicked"
-            );
-
+            personImage.classList.remove("image-clicked");
             void personImage.offsetWidth;
+            personImage.classList.add("image-clicked");
 
-            personImage.classList.add(
-                "image-clicked"
-            );
-
-            createClickEffect(
-                event.clientX,
-                event.clientY
-            );
-
+            createClickEffect(event.clientX, event.clientY);
             playClickSound();
-
             showSkills();
+
         }
     );
+
+    personImage.addEventListener(
+        "keydown",
+        function (event) {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                personImage.click();
+
+            }
+
+        }
+    );
+
 }
 
-// Skills
 
+// Skills
 let skillsVisible = false;
 
 function showSkills() {
-
     let imageArea =
-        document.querySelector(
-            ".image-area"
-        );
-
+        document.querySelector(".image-area");
     if (!imageArea) {
         return;
     }
 
-    let oldSkills =
-        imageArea.querySelectorAll(
-            ".skill-tag, .skill-center"
-        );
+    let oldSkills = imageArea.querySelectorAll(".skill-tag, .skill-center");
 
-    oldSkills.forEach(function (item) {
-        item.remove();
-    });
+    oldSkills.forEach(
+        function (item) {
+            item.remove();
+        }
+    );
 
-    skillsVisible =
-        !skillsVisible;
-
+    skillsVisible = !skillsVisible;
+    personImage.setAttribute("aria-expanded", skillsVisible ? "true" : "false");
     if (!skillsVisible) {
         return;
     }
 
-    let center =
-        document.createElement("div");
 
-    center.className =
-        "skill-center";
-
+    let center = document.createElement("div");
+    center.className = "skill-center";
+    center.setAttribute("aria-hidden", "true");
     center.style.left = "50%";
     center.style.top = "48%";
-
     imageArea.appendChild(center);
+    setTimeout(
+        function () {
+            center.classList.add("show");
+        }, 50
 
-    setTimeout(function () {
-
-        center.classList.add("show");
-
-    }, 50);
+    );
 
     let skills = [
         {
             name: "HTML",
             top: "18%",
             left: "15%",
-            link:
-                "https://developer.mozilla.org/en-US/docs/Web/HTML"
+            link: "https://developer.mozilla.org/en-US/docs/Web/HTML"
         },
         {
             name: "CSS",
             top: "38%",
             left: "2%",
-            link:
-                "https://developer.mozilla.org/en-US/docs/Web/CSS"
+            link: "https://developer.mozilla.org/en-US/docs/Web/CSS"
         },
         {
             name: "JavaScript",
             top: "65%",
             left: "8%",
-            link:
-                "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+            link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
         },
         {
             name: "React",
             top: "15%",
             right: "10%",
-            link:
-                "https://react.dev/"
+            link: "https://react.dev/"
         },
         {
             name: "Next.js",
             top: "40%",
             right: "0%",
-            link:
-                "https://nextjs.org/"
+            link: "https://nextjs.org/"
         },
         {
             name: "TypeScript",
             top: "67%",
             right: "8%",
-            link:
-                "https://www.typescriptlang.org/"
+            link: "https://www.typescriptlang.org/"
         },
         {
             name: "Git & GitHub",
             top: "83%",
             left: "35%",
-            link:
-                "https://github.com/mohamedkhaledcs"
+            link: "https://github.com/mohamedkhaledcs"
         }
+
     ];
 
-    skills.forEach(function (skill, index) {
+    skills.forEach(
+        function (skill, index) {
+            let tag = document.createElement("a");
 
-        let tag =
-            document.createElement("div");
+            tag.className = "skill-tag";
+            tag.textContent = skill.name;
+            tag.href = skill.link;
+            tag.target = "_blank";
+            tag.rel = "noopener noreferrer";
 
-        tag.className =
-            "skill-tag";
+            tag.setAttribute("aria-label", "Learn more about " + skill.name);
 
-        tag.textContent =
-            skill.name;
+            tag.style.top = skill.top;
+            if (skill.left) { 
+                tag.style.left = skill.left;
 
-        tag.style.top =
-            skill.top;
+            }
 
-        if (skill.left) {
-            tag.style.left =
-                skill.left;
+            if (skill.right) { 
+                tag.style.right = skill.right;
+
+            }
+
+            imageArea.appendChild(tag);
+
+            setTimeout(
+                function () {
+                    tag.classList.add("show");
+                }, 100 + index * 80
+            );
+
+
+            // Skill Hover
+            tag.addEventListener(
+                "mouseenter",
+                function () {
+                    tag.style.color = "#ff7100";
+                    tag.style.borderColor = "#ff7100";
+                    tag.style.backgroundColor = "rgba(255,113,0,0.1)";
+                    tag.style.boxShadow = "0 0 25px rgba(255,113,0,0.35)";
+                    tag.style.transform = "scale(1.08)";
+                    cursor.style.width = "38px";
+                    cursor.style.height = "38px";
+
+                }
+            );
+
+            tag.addEventListener(
+                "mouseleave",
+                function () {
+                    tag.style.color = "white";
+                    tag.style.borderColor = "rgba(255,113,0,0.5)";
+                    tag.style.backgroundColor = "rgba(15,15,15,0.9)";
+                    tag.style.boxShadow = "0 0 20px rgba(255,113,0,0.12)";
+                    tag.style.transform = "scale(1)";
+                    cursor.style.width = "26px";
+                    cursor.style.height = "26px";
+
+                }
+            );
+
+
+            // Skill Click
+            tag.addEventListener(
+                "click",
+                function (event) {
+                    event.stopPropagation();
+                    createClickEffect(event.clientX, event.clientY);
+                    playClickSound();
+
+                }
+            );
+
         }
+    );
 
-        if (skill.right) {
-            tag.style.right =
-                skill.right;
-        }
-
-        imageArea.appendChild(tag);
-
-        setTimeout(function () {
-
-            tag.classList.add("show");
-
-        }, 100 + index * 80);
-
-        // Skill Hover
-
-        tag.addEventListener(
-            "mouseenter",
-            function () {
-
-                tag.style.color =
-                    "#ff7100";
-
-                tag.style.borderColor =
-                    "#ff7100";
-
-                tag.style.backgroundColor =
-                    "rgba(255,113,0,0.1)";
-
-                tag.style.boxShadow =
-                    "0 0 25px rgba(255,113,0,0.35)";
-
-                tag.style.transform =
-                    "scale(1.08)";
-
-                cursor.style.width =
-                    "38px";
-
-                cursor.style.height =
-                    "38px";
-            }
-        );
-
-        tag.addEventListener(
-            "mouseleave",
-            function () {
-
-                tag.style.color =
-                    "white";
-
-                tag.style.borderColor =
-                    "rgba(255,113,0,0.5)";
-
-                tag.style.backgroundColor =
-                    "rgba(15,15,15,0.9)";
-
-                tag.style.boxShadow =
-                    "0 0 20px rgba(255,113,0,0.12)";
-
-                tag.style.transform =
-                    "scale(1)";
-
-                cursor.style.width =
-                    "26px";
-
-                cursor.style.height =
-                    "26px";
-            }
-        );
-
-        // Skill Click
-
-        tag.addEventListener(
-            "click",
-            function (event) {
-
-                event.stopPropagation();
-
-                createClickEffect(
-                    event.clientX,
-                    event.clientY
-                );
-
-                playClickSound();
-
-                window.open(
-                    skill.link,
-                    "_blank"
-                );
-            }
-        );
-    });
 }
+
 
